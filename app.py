@@ -251,7 +251,6 @@ def main():
 
                 # Prompt the user if they want to combine more files
                 st.write("Do you want to combine more files?")
-                combine_more, exit_app = st.columns([1,1])
                 with combine_more:
                     combine_more_clicked = st.button('Yes')
                 with exit_app:
