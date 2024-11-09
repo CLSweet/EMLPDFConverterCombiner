@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 from datetime import datetime
@@ -59,7 +58,10 @@ def main():
         st.dataframe(df[['File Name', 'Date Modified', 'File Type']])
 
         # Prompt the user to input the indices
-        st.session_state.user_input = st.text_input("Choose the files you want to convert (e.g., '1, 2-4'): ", value=st.session_state.user_input)
+        st.session_state.user_input = st.text_input(
+            "Choose the files you want to convert (e.g., '1, 2-4'): ",
+            value=st.session_state.user_input
+        )
 
         if st.session_state.user_input:
             # Parse the user input
@@ -95,7 +97,11 @@ def main():
             st.dataframe(selected_df[['File Name', 'Date Modified', 'File Type']])
 
             # Prompt for Zamzar API key (required for .eml to .pdf conversion)
-            st.session_state.api_key = st.text_input('Enter your Zamzar API key (required for .eml to .pdf conversion):', type='password', value=st.session_state.api_key)
+            st.session_state.api_key = st.text_input(
+                'Enter your Zamzar API key (required for .eml to .pdf conversion):',
+                type='password',
+                value=st.session_state.api_key
+            )
 
             # Button to start conversion and combination
             if st.button('Convert and Combine Selected Files'):
@@ -139,7 +145,12 @@ def main():
                             data_content = {'target_format': target_format}
                             files = {'source_file': (file_name, uploaded_file.getvalue())}
 
-                            response = requests.post(endpoint, data=data_content, files=files, auth=HTTPBasicAuth(st.session_state.api_key, ''))
+                            response = requests.post(
+                                endpoint,
+                                data=data_content,
+                                files=files,
+                                auth=HTTPBasicAuth(st.session_state.api_key, '')
+                            )
 
                             if response.status_code != 201:
                                 st.error(f"Error starting conversion job for {file_name}.")
@@ -152,7 +163,10 @@ def main():
                             status_endpoint = f"https://sandbox.zamzar.com/v1/jobs/{job_id}"
                             with st.spinner(f"Converting {file_name}..."):
                                 while True:
-                                    response = requests.get(status_endpoint, auth=HTTPBasicAuth(st.session_state.api_key, ''))
+                                    response = requests.get(
+                                        status_endpoint,
+                                        auth=HTTPBasicAuth(st.session_state.api_key, '')
+                                    )
                                     job_status = response.json()
                                     status = job_status['status']
                                     if status == 'successful':
@@ -166,9 +180,16 @@ def main():
                             target_file_id = job_status['target_files'][0]['id']
                             download_endpoint = f"https://sandbox.zamzar.com/v1/files/{target_file_id}/content"
                             output_pdf_name = file_name.replace('.eml', '.pdf')
-                            output_pdf_path = os.path.join(st.session_state.temp_dir.name, output_pdf_name)  # Save in temporary folder
+                            output_pdf_path = os.path.join(
+                                st.session_state.temp_dir.name,
+                                output_pdf_name
+                            )  # Save in temporary folder
 
-                            response = requests.get(download_endpoint, stream=True, auth=HTTPBasicAuth(st.session_state.api_key, ''))
+                            response = requests.get(
+                                download_endpoint,
+                                stream=True,
+                                auth=HTTPBasicAuth(st.session_state.api_key, '')
+                            )
                             if response.status_code == 200:
                                 with open(output_pdf_path, 'wb') as pdf_file:
                                     for chunk in response.iter_content(chunk_size=1024):
@@ -188,7 +209,9 @@ def main():
                                 eml_files_processed += 1
                                 progress = eml_files_processed / num_eml_files
                                 progress_bar.progress(progress)
-                                progress_text.text(f"Converted {eml_files_processed} out of {num_eml_files} .eml files")
+                                progress_text.text(
+                                    f"Converted {eml_files_processed} out of {num_eml_files} .eml files"
+                                )
                             else:
                                 st.error(f"Failed to download the converted PDF for {file_name}.")
                                 st.stop()
@@ -243,23 +266,16 @@ def main():
                 # Provide a download link
                 with open(combined_pdf_path, 'rb') as f:
                     st.success("Combined PDF is ready!")
-                    st.download_button(
+                    download_clicked = st.download_button(
                         label="Download Combined PDF",
                         data=f,
                         file_name=combined_pdf_name,
                         mime="application/pdf"
                     )
 
-                # Prompt the user if they want to combine more files
-                st.write("Do you want to combine more files?")
-                combine_more, exit_app = st.columns([1,1])
-                with combine_more:
-                    combine_more_clicked = st.button('Yes')
-                with exit_app:
-                    exit_app_clicked = st.button('No')
-
-                if combine_more_clicked:
-                    # Update the dataframe to replace '.eml' files with their converted '.pdf' versions
+                # Automatically reset the app for more combinations after download
+                if download_clicked:
+                    # Update the file list to replace '.eml' files with their converted '.pdf' versions
                     updated_file_details = []
                     for file_detail in st.session_state.file_details:
                         file_name = file_detail['File Name']
@@ -284,13 +300,11 @@ def main():
                     # Clear the previous user input and selected files
                     st.session_state.user_input = ''
 
-                    # Clear previous selected files output
+                    # Rerun the app to reflect changes
                     st.experimental_rerun()
-                elif exit_app_clicked:
-                    st.write("Thank you for using the app!")
-                    # Clear session_state to start over
-                    st.session_state.clear()
-                    st.stop()
+
+            else:
+                st.info("Click the button to convert and combine selected files.")
         else:
             st.info("Please enter the indices of the files you want to combine.")
     else:
