@@ -15,16 +15,16 @@ def main():
     st.markdown('''
     ### Program Description & Instructions:
 
-    The following is a program that allows the user to combine `.eml` and `.pdf` files into one continuous PDF.
+    The following is a program that allows the user to combine .eml and .pdf files into one continuous PDF.
     The program begins by prompting the user to upload all the files they intend to use.
     The program then prompts the user to further select which files they specifically want to combine;
     selection inputs can be made in a comma-separated list with either the index of the specific file or with a range of indices.
-    Following the user's selection, the program prompts the user for their **Zamzar API key**—used in converting the `.eml` files to `.pdf`s.
+    Following the user's selection, the program prompts the user for their **Zamzar API key**—used in converting the .eml files to .pdfs.
     If the user does not already have a key, they can sign up for a free one at [THIS LINK](https://developers.zamzar.com/signup?plan=test)—includes 100 free conversions,
     after which the user can either pay or use a new email to generate another key.
     After this, all the email files in the subselection are converted to PDFs and combined with the remaining PDFs into one downloadable file.
     After downloading the file, the program automatically returns to the subselection window for the user to combine and convert different files if they so please.
-    If the user wants to recombine any `.eml` file that has already been converted, the program will not make additional API calls,
+    If the user wants to recombine any .eml file that has already been converted, the program will not make additional API calls,
     instead drawing upon the previous conversion stored in a temporary cache.
     ''')
 
