@@ -100,7 +100,7 @@ def main():
        - The app supports multiple actions without losing previously uploaded files.
        - When users choose to access files they've already converted, those files are stored in a temporary cache to eliminate redundant API requests.
     
-    
+    <br><br><br>
     """, unsafe_allow_html=True)
 
     # Initialize session state variables
