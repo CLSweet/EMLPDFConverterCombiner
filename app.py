@@ -72,7 +72,7 @@ def main():
 
     # Detailed instructions
     st.markdown("""
-    <h3><b>Instructions:</b></h2>
+    <h4><b>Program Description & Instructions:</b></h2>
 
     1. **Upload Files:**
        - Use the file uploader below to upload your EML, MSG, and PDF files.
@@ -99,8 +99,7 @@ def main():
        - After each action, the app will loop back to allow you to perform another action.
        - The app supports multiple actions without losing previously uploaded files.
        - When users choose to access files they've already converted, those files are stored in a temporary cache to eliminate redundant API requests.
-    
-    <br><br>
+    <br>
     """, unsafe_allow_html=True)
 
     # Initialize session state variables
