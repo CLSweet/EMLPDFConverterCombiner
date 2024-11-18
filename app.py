@@ -438,7 +438,7 @@ def main():
 
                         if page_ranges_input:
                             # Button to split and download
-                            if st.button('Split PDF'):
+                            if st.button('Split and Download'):
                                 # Validate and parse the page ranges
                                 page_numbers = parse_page_ranges(page_ranges_input)
                                 if page_numbers is None:
